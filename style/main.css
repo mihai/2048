@@ -543,8 +543,14 @@ hr {
   .best-tile-container,
   .best-container {
     margin-top: 0;
-    padding: 15px 10px;
     min-width: 40px; }
+
+  .score-container,
+  .best-container {
+    padding: 15px 10px; }
+
+  .best-tile-container {
+    padding: 15px 20px; }
 
   .heading {
     margin-bottom: 10px; }
