@@ -50,11 +50,24 @@ h1.title {
   float: right;
   text-align: right; }
 
-.score-container, .best-container {
+.score-container,
+.best-container {
+  background: #bbada0; }
+  .score-container:after,
+  .best-container:after {
+    color: #eee4da; }
+
+.best-tile-container {
+  background: #edc22e; }
+  .best-tile-container:after {
+    color: #f9f6f2; }
+
+.score-container,
+.best-tile-container,
+.best-container {
   position: relative;
   display: inline-block;
-  background: #bbada0;
-  padding: 15px 25px;
+  padding: 15px 30px;
   font-size: 25px;
   height: 25px;
   line-height: 47px;
@@ -63,7 +76,9 @@ h1.title {
   color: white;
   margin-top: 8px;
   text-align: center; }
-  .score-container:after, .best-container:after {
+  .score-container:after,
+  .best-tile-container:after,
+  .best-container:after {
     position: absolute;
     width: 100%;
     top: 10px;
@@ -71,9 +86,10 @@ h1.title {
     text-transform: uppercase;
     font-size: 13px;
     line-height: 13px;
-    text-align: center;
-    color: #eee4da; }
-  .score-container .score-addition, .best-container .score-addition {
+    text-align: center; }
+  .score-container .score-addition,
+  .best-tile-container .score-addition,
+  .best-container .score-addition {
     position: absolute;
     right: 30px;
     color: red;
@@ -91,6 +107,9 @@ h1.title {
 
 .score-container:after {
   content: "Score"; }
+
+.best-tile-container:after {
+  content: "Best Tile"; }
 
 .best-container:after {
   content: "Best"; }
@@ -506,7 +525,12 @@ hr {
     width: 280px;
     margin: 0 auto; }
 
-  .score-container, .best-container {
+  .best-tile-container {
+    background: #edc22e; }
+
+  .score-container,
+  .best-tile-container,
+  .best-container {
     margin-top: 0;
     padding: 15px 10px;
     min-width: 40px; }

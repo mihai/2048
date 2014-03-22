@@ -65,13 +65,31 @@ h1.title {
   text-align: right;
 }
 
-.score-container, .best-container {
+.score-container,
+.best-container {
+  background: $game-container-background;
+
+  &:after {
+    color: $tile-color;
+  }
+}
+
+.best-tile-container {
+  background: $tile-gold-color;
+
+  &:after {
+    color: $bright-text-color;
+  }
+}
+
+.score-container,
+.best-tile-container,
+.best-container {
   $height: 25px;
 
   position: relative;
   display: inline-block;
-  background: $game-container-background;
-  padding: 15px 25px;
+  padding: 15px 30px;
   font-size: $height;
   height: $height;
   line-height: $height + 22px;
@@ -90,7 +108,6 @@ h1.title {
     font-size: 13px;
     line-height: 13px;
     text-align: center;
-    color: $tile-color;
   }
 
   .score-addition {
@@ -109,6 +126,10 @@ h1.title {
 
 .score-container:after {
   content: "Score";
+}
+
+.best-tile-container:after {
+  content: "Best Tile";
 }
 
 .best-container:after {
@@ -487,7 +508,13 @@ hr {
     margin: 0 auto;
   }
 
-  .score-container, .best-container {
+  .best-tile-container {
+    background: $tile-gold-color;
+  }
+
+  .score-container,
+  .best-tile-container,
+  .best-container {
     margin-top: 0;
     padding: 15px 10px;
     min-width: 40px;
