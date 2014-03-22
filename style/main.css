@@ -202,9 +202,9 @@ hr {
     .game-container .game-message p {
       font-size: 60px;
       font-weight: bold;
-      height: 60px;
       line-height: 60px;
-      margin-top: 222px; }
+      margin-top: 30%;
+      padding: 0 20px; }
     .game-container .game-message .lower {
       display: block;
       margin-top: 59px; }
@@ -573,9 +573,9 @@ hr {
       .game-container .game-message p {
         font-size: 60px;
         font-weight: bold;
-        height: 60px;
         line-height: 60px;
-        margin-top: 222px; }
+        margin-top: 30%;
+        padding: 0 20px; }
       .game-container .game-message .lower {
         display: block;
         margin-top: 59px; }

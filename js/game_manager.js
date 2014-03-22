@@ -5,6 +5,7 @@ function GameManager(size, InputManager, Actuator, ScoreManager) {
   this.actuator     = new Actuator;
 
   this.startTiles   = 2;
+  this.WINNING_TILE = 512;
 
   this.inputManager.on("move", this.move.bind(this));
   this.inputManager.on("restart", this.restart.bind(this));
@@ -21,12 +22,13 @@ GameManager.prototype.restart = function () {
 
 // Keep playing after winning
 GameManager.prototype.keepPlaying = function () {
-  this.keepPlaying = true;
+  this.won          = false;
+  this.WINNING_TILE = this.WINNING_TILE * 2;
   this.actuator.continue();
 };
 
 GameManager.prototype.isGameTerminated = function () {
-  if (this.over || (this.won && !this.keepPlaying)) {
+  if (this.over || this.won) {
     return true;
   } else {
     return false;
@@ -41,7 +43,6 @@ GameManager.prototype.setup = function () {
   this.bestTile    = 4;
   this.over        = false;
   this.won         = false;
-  this.keepPlaying = false;
 
   // Add the initial tiles
   this.addStartTiles();
@@ -79,6 +80,7 @@ GameManager.prototype.actuate = function () {
     score:      this.score,
     over:       this.over,
     won:        this.won,
+    currentTile:this.bestTile,
     bestTile:   this.scoreManager.get(scoreKey),
     terminated: this.isGameTerminated()
   });
@@ -147,8 +149,10 @@ GameManager.prototype.move = function (direction) {
             self.bestTile = merged.value;
           }
 
-          // The mighty 2048 tile
-          if (merged.value === 2048) self.won = true;
+          // The mighty WINNING TILE tile
+          if (merged.value === self.WINNING_TILE) {
+            self.won = true;
+          }
         } else {
           self.moveTile(tile, positions.farthest);
         }
