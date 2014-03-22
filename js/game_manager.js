@@ -5,6 +5,7 @@ function GameManager(size, InputManager, Actuator, ScoreManager) {
   this.actuator     = new Actuator;
 
   this.startTiles   = 2;
+  this.WINNING_TILE = 512;
 
   this.inputManager.on("move", this.move.bind(this));
   this.inputManager.on("restart", this.restart.bind(this));
@@ -21,12 +22,13 @@ GameManager.prototype.restart = function () {
 
 // Keep playing after winning
 GameManager.prototype.keepPlaying = function () {
-  this.keepPlaying = true;
+  this.won          = false;
+  this.WINNING_TILE = this.WINNING_TILE * 2;
   this.actuator.continue();
 };
 
 GameManager.prototype.isGameTerminated = function () {
-  if (this.over || (this.won && !this.keepPlaying)) {
+  if (this.over || this.won) {
     return true;
   } else {
     return false;
@@ -38,9 +40,9 @@ GameManager.prototype.setup = function () {
   this.grid        = new Grid(this.size);
 
   this.score       = 0;
+  this.bestTile    = 4;
   this.over        = false;
   this.won         = false;
-  this.keepPlaying = false;
 
   // Add the initial tiles
   this.addStartTiles();
@@ -68,15 +70,18 @@ GameManager.prototype.addRandomTile = function () {
 
 // Sends the updated grid to the actuator
 GameManager.prototype.actuate = function () {
-  if (this.scoreManager.get() < this.score) {
-    this.scoreManager.set(this.score);
+  var scoreKey = 'bestTile';
+
+  if (this.scoreManager.get(scoreKey) < this.bestTile) {
+    this.scoreManager.set(scoreKey, this.bestTile);
   }
 
   this.actuator.actuate(this.grid, {
     score:      this.score,
     over:       this.over,
     won:        this.won,
-    bestScore:  this.scoreManager.get(),
+    currentTile:this.bestTile,
+    bestTile:   this.scoreManager.get(scoreKey),
     terminated: this.isGameTerminated()
   });
 
@@ -139,8 +144,15 @@ GameManager.prototype.move = function (direction) {
           // Update the score
           self.score += merged.value;
 
-          // The mighty 2048 tile
-          if (merged.value === 2048) self.won = true;
+          // Update best tile value
+          if (merged.value > self.bestTile) {
+            self.bestTile = merged.value;
+          }
+
+          // The mighty WINNING TILE tile
+          if (merged.value === self.WINNING_TILE) {
+            self.won = true;
+          }
         } else {
           self.moveTile(tile, positions.farthest);
         }

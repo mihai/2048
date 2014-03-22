@@ -1,11 +1,13 @@
 function HTMLActuator() {
-  this.tileContainer    = document.querySelector(".tile-container");
-  this.scoreContainer   = document.querySelector(".score-container");
-  this.bestContainer    = document.querySelector(".best-container");
-  this.messageContainer = document.querySelector(".game-message");
-  this.sharingContainer = document.querySelector(".score-sharing");
+  this.tileContainer      = document.querySelector(".tile-container");
+  this.scoreContainer     = document.querySelector(".score-container");
+  this.bestContainer      = document.querySelector(".best-container");
+  this.bestTileContainer  = document.querySelector(".best-tile-container");
+  this.messageContainer   = document.querySelector(".game-message");
+  this.sharingContainer   = document.querySelector(".score-sharing");
 
   this.score = 0;
+  this.currentTile = 4;
 }
 
 HTMLActuator.prototype.actuate = function (grid, metadata) {
@@ -23,13 +25,14 @@ HTMLActuator.prototype.actuate = function (grid, metadata) {
     });
 
     self.updateScore(metadata.score);
-    self.updateBestScore(metadata.bestScore);
+    self.updateBestTile(metadata.bestTile);
 
     if (metadata.terminated) {
+      self.currentTile = metadata.currentTile;
       if (metadata.over) {
-        self.message(false); // You lose
+        self.message(false, metadata.currentTile); // You lose
       } else if (metadata.won) {
-        self.message(true); // You win!
+        self.message(true, metadata.currentTile); // You win!
       }
     }
 
@@ -125,13 +128,23 @@ HTMLActuator.prototype.updateScore = function (score) {
   }
 };
 
+HTMLActuator.prototype.updateBestTile = function (limit) {
+  this.bestTileContainer.textContent = limit;
+};
+
 HTMLActuator.prototype.updateBestScore = function (bestScore) {
   this.bestContainer.textContent = bestScore;
 };
 
-HTMLActuator.prototype.message = function (won) {
-  var type    = won ? "game-won" : "game-over";
-  var message = won ? "You win!" : "Game over!";
+HTMLActuator.prototype.message = function (won, tileValue) {
+  var type    = "game-over";
+  var message = "Game over!";
+  var extra   = "Better luck next time…";
+  if (won) {
+    type    = "game-won";
+    message = "You reached " + tileValue;
+    extra   = "But you can do better for sure";
+  }
 
   if (typeof ga !== "undefined") {
     ga("send", "event", "game", "end", type, this.score);
@@ -139,6 +152,7 @@ HTMLActuator.prototype.message = function (won) {
 
   this.messageContainer.classList.add(type);
   this.messageContainer.getElementsByTagName("p")[0].textContent = message;
+  this.messageContainer.getElementsByClassName("game-message-extra")[0].textContent = extra;
 
   this.clearContainer(this.sharingContainer);
   this.sharingContainer.appendChild(this.scoreTweetButton());
@@ -155,13 +169,13 @@ HTMLActuator.prototype.scoreTweetButton = function () {
   var tweet = document.createElement("a");
   tweet.classList.add("twitter-share-button");
   tweet.setAttribute("href", "https://twitter.com/share");
-  tweet.setAttribute("data-via", "gabrielecirulli");
-  tweet.setAttribute("data-url", "http://git.io/2048");
-  tweet.setAttribute("data-counturl", "http://gabrielecirulli.github.io/2048/");
+  tweet.setAttribute("data-via", "MCirlanaru");
+  tweet.setAttribute("data-url", "http://mihai.github.io/2048/");
+  tweet.setAttribute("data-counturl", "http://mihai.github.io/2048/");
   tweet.textContent = "Tweet";
 
-  var text = "I scored " + this.score + " points at 2048, a game where you " +
-             "join numbers to score high! #2048game";
+  var text = "I just reached the " + this.currentTile + " tile at 2048+, a game where you " +
+             "join numbers to reach the highest possible tile value! #Beyond2048";
   tweet.setAttribute("data-text", text);
 
   return tweet;
