@@ -168,6 +168,11 @@ hr {
   line-height: 42px;
 }
 
+.game-buttons > a {
+  @include button;
+  margin-top: 10px;
+}
+
 // Game field mixin used to render CSS at different width
 @mixin game-field {
   .game-container {
